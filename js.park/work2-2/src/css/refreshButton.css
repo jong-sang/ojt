@@ -1,0 +1,10 @@
+button {
+  margin-right: 4px;
+  border: 0;
+  outline: 0;
+  background-color: #82b1e8;
+  color: #fff;
+  float: right;
+  height: 2rem;
+  border-radius: 4px;
+}
