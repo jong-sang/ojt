@@ -2591,3 +2591,220 @@ footer { grid-area: footer; }
 }
 ```
 
+
+
+#### row-gap(grid-row-gap)
+
+각 행과 행 사이의 간격(gutter)을 지정한다
+
+- 더 명확하게는 그리드 선(Grid Line)의 크기를 지정한다
+
+```css
+.container {
+  row-gap: 크기;
+}
+```
+
+
+
+#### column-gap(grid-column-gap)
+
+각 열과 열 사이의 간격(Gutter)을 지정한다.
+
+```
+.container {
+	column-gap: 크기;
+}
+```
+
+
+
+#### gap(grid-gap)
+
+각 행과 행, 열과 열 사이의 간격을 지정한다
+
+row-gap와 column-gap의 단축 속성
+
+```css
+.container {
+  gap: <grid-row-gap> <grid-column-gap>;
+}
+```
+
+```css
+.container {
+  display: grid;
+  grid-template-rows: repeat(2, 150px);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px 10px;
+}
+ 
+.container {
+  gap: 10px;
+}
+
+.container {
+  gap: 10px 0;
+  gap: 0 10px;
+}
+```
+
+
+
+#### grid-auto-rows
+
+*암시적 행(Track)*의 크기를 정의한다.
+
+아이템이 grid-template-rows로 정의한 명시적 행 외부에 배치되는 경우 암시적 행의 크기가 적용된다.
+
+```html
+<div class="container">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+</div>
+```
+
+```css
+.container {
+  width: 300px;
+  height: 200px;
+  display: grid;
+  grid-template-rows: 100px 100px;
+  grid-tempalte-columns: 150px 150px;
+  gird-auto-rows: 100px;
+}
+
+.item:nth-child(3) {
+  grid-row: 3 / 4;
+}
+```
+
+
+
+#### grid-auto-columns
+
+암시적 열의 크기를 정의한다
+
+아이템이 grid-template-columns로 정의한 명시적 열 외부에 배치되는 경우 암시적 열의 크기가 자동 적용
+
+```css
+.container {
+  width: 300px;
+  height: 200px;
+  display: grid;
+  grid-template-rows: 100px 100px;
+  grid-template-columns: 150px 150px;
+  grid-auto-rows: 100px;
+  grid-auto-columns: 100px;
+}
+
+.item:nth-child(3) {
+  grid-row: 3 / 4;
+  grid-columns: 3 / 4;
+}
+```
+
+
+
+grid-auto-rows, grid-auto-columns로 암시적 크기가 적용되면 행과 열은 양수 라인 번호만 사용 가능하다 (음수 사용 불가)
+
+
+
+#### grid-auto-flow
+
+배치하지 않은 아이템을 어떤 방식의 '자동 배치 알고리즘'으로 처리할 것인지 정의
+
+> 배치한 아이템은 grid-area를 사용한 아이템을 의미한다
+
+| 값           | 의미                                       | 기본값 |
+| ------------ | ------------------------------------------ | ------ |
+| row          | 각 행 축을 따라 차례로 배치                | row    |
+| column       | 각 열 축을 따라 차례로 배치                |        |
+| row dense    | 각 행 축을 따라 차례로 배치, 빈 영역 메움! |        |
+| column dense | 각 열 축을 따라 차례로 배치, 빈 영역 메움  |        |
+
+
+
+row 예제
+
+```css
+.container {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: row || row dense || dense;
+}
+
+.item:nth-child(2) {
+  grid-column: span 3;
+}
+```
+
+![이미지](https://heropy.blog/images/screenshot/css-grid/grid-auto-flow-1.jpg)
+
+
+
+columns 예제
+
+```css
+.container {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: column || column dense;
+}
+
+.item:nth-child(1) {
+  grid-column: 2 / span 2; 
+}
+
+.item:nth-child(2) {
+  grid-column: span 2;
+}
+```
+
+![image](https://heropy.blog/images/screenshot/css-grid/grid-auto-flow-2.jpg)
+
+ 
+
+#### align-content
+
+그리드 콘텐츠를 수직 정렬한다
+
+그리드 콘텐츠의 세로 너비가 그리드 컨테이너보다 작아야한다
+
+| 값            | 의미                                                         | 기본값 |
+| ------------- | ------------------------------------------------------------ | ------ |
+| normal        | stretch와 같음                                               | normal |
+| start         | 시작점 정렬                                                  |        |
+| center        | 수직 가운데 정렬                                             |        |
+| end           | 끝점(아래쪽) 정렬                                            |        |
+| space-around  | 각 행 위아래에 여백으르 고르게 설정                          |        |
+| space-between | 첫 행은 시작점에, 끝 행은 끝점에 정렬되고 나머지 여백으로 고르게 정렬 |        |
+| space-evenly  | 모든 여백을 고르게 정렬                                      |        |
+| stretch       | 열 축을 채우기 위해 그리드 콘텐츠를 늘림                     |        |
+
+![이미지](https://heropy.blog/images/screenshot/css-grid/align-content-1.jpg)
+
+
+
+#### justify-content
+
+그리드 콘텐츠를 수평 정렬한다
+
+그리드 콘텐츠의 가로 너비가 그리드 컨테이너보다 작아야한다
+
+| 값            | 의미                                                         | 기본값 |
+| ------------- | ------------------------------------------------------------ | ------ |
+| normal        | stretch                                                      | normal |
+| start         | 시작점 정렬                                                  |        |
+| center        | 수평 가운데 정렬                                             |        |
+| end           | 끝점 정렬                                                    |        |
+| space-around  | 각 열 좌우에 여백을 고르게 설정                              |        |
+| space-between | 첫 열은 시작점에, 끝 열은 끝점에 정렬되고 나머지 여백으로 고르게 정렬 |        |
+| space-evenly  | 모든 여백을 고르게 정렬                                      |        |
+| stretch       | 행 축을 채우기 위해 그리드 콘텐츠를 늘림                     |        |
+
+![img](https://heropy.blog/images/screenshot/css-grid/justify-content-1.jpg)
+
