@@ -447,3 +447,503 @@ console.log(value) // foo
 
 
 
+### Truthy & Falsy
+
+문법보다는 개념에 가까움
+
+```js
+console.log(!undefined); // true
+console.log(!null); // true
+console.log(!0); // true
+console.log(!''); // true
+console.log(!NaN); // true
+console.log(!false); // true
+
+falsy 거짓 같은 것 정도로 이해하면 됨
+```
+
+마찬가지로 truthy도 이것과 유사하다
+
+```js
+console.log(!3); // false
+console.log(!'hello'); // false
+console.log(!['arr']); // false
+console.log(![]); // false
+console.log(!{}); // false
+
+truthy 참 같은 것 정도
+```
+
+
+
+### 단축 평가 논리 계산법
+
+논리 연산자로 코드를 더 짧게 작성하는 것
+
+```js
+console.log(true && 'hello') // hello
+console.log('false' && 'hello') // false
+console.log('hello' && 'bye') // bye
+console.log(null && 'hello') // null
+```
+
+&& 연산 할 때 앞에 truthy 값이 존재한다면 무조건 뒤의 값이 출력된다
+
+반대로 && 연산 앞에 falsy 값이 존재한다면 뒤의 값을 확인하지 않고 falsy 값을 출력한다
+
+
+
+### 함수의 기본 파라미터
+
+함수 선언 시 파라미터 값을 전달 해야할 때 그 값이 존재하지 않으면 falsy한  값을 리턴한다
+
+이런 상황을 방지하기 위해서 값이 없을 때 초기값을 설정할 수 있는데 ES6 문법에서는 아래처럼 선언이 가능하다
+
+```js
+function calculateCircleArea(r =  1) {
+  return Math.PI * r * r;
+}
+
+const area = calculateCircleArea();
+console.log(area) // 3.141592....
+```
+
+화살표 함수로도 구현이 가능하다
+
+```js
+const calculateCircleArea = (r = 1) => Math.PI * r * r
+
+const area = calculateCircleArea();
+console.log(area) // 3.141592....
+```
+
+
+
+### 조건문 더 스마트하게 사용하기
+
+```js
+function isAnimal(text) {
+  return (
+  	text === '고양이' || text === '개' || text === '거북이' || text === '너구리'
+  );
+}
+
+console.log(isAnimal('개')) // true
+console.log(isAnimal('노트북')) // false
+```
+
+위와 같이 조건이 길어지면 리턴 코드가 매우 길어진다
+
+```js
+const isAnimal = (text) => ['고양이','개','거북이','너구리'].includes(text);
+
+function isAnimal(text) {
+  const animals = ['고양이','개','거북이','너구리'];
+  return animals.includes(text)
+}
+```
+
+위의 두가지 방법으로 같은 기능을 하는 코드를 작성 할 수 있다.
+
+물론 코드가 짧다고 다 좋은건 아니고 짧으면서도 이해하기 쉬운 방법이 가장 좋다.
+
+또한 조건에 따라 행동을 다르게 해야한다면 객체를 이용해서 사용하는 것도 방법이다.
+
+```js
+function getSound(animal) {
+  const sounds = {
+    개: '멍멍',
+    고양이 : '야옹',
+    참새: '짹짹',
+    비둘기: '구구 구 구'
+  };
+  return sounds[animal] || '...?';
+}
+
+console.log(getSound('개')); // 멍멍
+console.log(getSound('고양이')); // 야옹
+console.log(getSound('인간')); // ...?
+```
+
+
+
+### 비구조화 활당
+
+```js
+const object = { a: 1, b: 2};
+const { a, b } = object
+console.log(a);
+console.log(b);
+```
+
+이렇게도 사용이 가능하다
+
+```js
+const object = { a: 1, b: 2};
+
+function print({ a, b }) {
+  console.log(a);
+  console.log(b);
+}
+
+print(object)
+```
+
+그리고 또 값이 없을 경우를 위해서 초기값을 설정 할 수 있는데 이렇게 설정도 가능하다
+
+```js
+const object = { a: 1 };
+
+function print({ a, b = 2 }) {
+  console.log(a);
+  console.log(b);
+}
+
+print(object)
+```
+
+다음은 비구조화 할당 시 이름을 바꾸는 방법이다
+
+```js
+const animal = {
+  name : '멍멍이',
+  type: '개'
+}
+
+const { name: nickname } = animal;
+console.log(nickname);
+```
+
+그리고 배열 또한 이러한 방법으로 할당이 가능한데 이번에는 [ ] (대괄호)를 사용하면 된다
+
+```js
+const arr = [1, 2];
+const [one, two] = arr;
+
+console.log(one);
+console.log(two);
+```
+
+마찬가지로 초기값도 설정이 가능하다
+
+```js
+const arr = [1];
+const [one, two = 2] = arr;
+
+console.log(one);
+console.log(two);
+```
+
+
+
+이번에는 깊은 곳에 저장된 값을 꺼낼때 사용하는 방법이다
+
+```js
+const deepObject = {
+  state: {
+    information: {
+      name: 'velopert',
+      languages: ['korean', 'english', 'chinese']
+    }
+  },
+  value: 5
+}
+
+const { name, languages } = deepObject.state.information;
+const { value } = deepObject;
+
+const extracted = {
+  name, // name: name 과 같은 의미, 키값과 벨류값의 이름이 같으면 이렇게 생략이 가능하다
+  languages,
+  value
+}
+
+console.log(extracted)
+```
+
+다른 방법으로 한번에 추출 가능 ( 내 기준에서는 이게 더 어려움 )
+
+```js
+const deepObject = {
+  state: {
+    information: {
+      name: 'velopert',
+      languages: ['korean', 'english', 'chinese']
+    }
+  },
+  value: 5
+}
+
+const {
+  state: {
+    information: {
+      name, languages
+    }
+  },
+  value
+} = deepObject;
+
+const extracted = {
+  name, // name: name 과 같은 의미, 키값과 벨류값의 이름이 같으면 이렇게 생략이 가능하다
+  languages,
+  value
+}
+
+console.log(extracted)
+```
+
+
+
+### spread 연산자
+
+```js
+const slime = {
+  name: '슬라임'
+};
+
+const cuteSlime = {
+  ...slime, // ...은 하나의 연산자 -> spread라는 연산자를 의미 -> 배열의 값을 그대로 복사해온다
+  attribute: 'cute'
+};
+
+const purpleCuteslime = {
+  name: '슬라임',
+  attribute: 'cute',
+  color: 'purple'
+};
+```
+
+이렇게 사용하면 원본  slime의 값은 그대로이다
+
+즉 slime != cuteSlime 가 된다. 배열을 복사하여 사용한다 라는 의미
+
+
+
+### rest
+
+...연산자는 동일하지만 그 역활이 좀 다르다
+
+```js
+const purpleCuteslime = {
+  name: '슬라임',
+  attribute: 'cute',
+  color: 'purple'
+};
+
+const { color, ...rest } = purpleCuteslime;
+console.log(color) // purple
+console.log(rest) // name: '슬라임', attribute: 'cute'
+```
+
+비 구조화 할당 시  color 값을 제외한 나머지 값들이 rest에 추출되어 저장되는 모습이 확인 가능하다.
+
+마찬가지로 배열에서도 사용가능하다
+
+```js
+const numbers = [0, 1, 2, 3, 4, 5, 6];
+
+const [one, ...rest] = numbers; // const [ ...rest, last ] = numbers; 이렇게는 사용이 불가능하다
+console.log(one); // 0
+console.log(rest); // [1,2,3,4,5,6]
+```
+
+
+
+### scope
+
+scope에는 3종류가 있다. Global, Function, Block
+
+이는 다른 언어에서 전역 변수, 지역 변수의 개념으로 이해하면 된다
+
+```js
+const value = 'hello!';
+
+function myFunction() {
+  const value = 'bye!';
+  const anotherValue = 'world';
+  function functionInside() {
+    console.log('functionInside :');
+    console.log(value); // bye
+    console.log(anotherValue) // world
+  }
+  functionInside();
+}
+
+myFunction();
+console.log('global scope');
+console.log(value); // hello
+console.log(anotherValue); // not definded
+```
+
+
+
+### hoisting
+
+아직 선언되지 않은 함수, 변수 등을 끌어올려서 사용하는 개념
+
+```js
+myFunction();
+
+function myFunction() {
+  console.log('hello world');
+}
+```
+
+위와 같이 작성해도 자바스크립트에서는 동작을 한다.
+
+다른 언어 (C, Golang, Python 등)에서는 작동하지 않는다
+
+가능은 하지만 가급적 사용하면 안된다. 코드 읽기가 힘들다
+
+
+
+## 비동기 처리 다루기
+
+### 비동기 처리
+
+```js
+function work() {
+  setTimeout(() => {
+    const start = Date.now();
+    for (let i = 0; i < 1000000000; i++) {
+
+    }
+    const end = Date.now();
+    console.log(end-start+'ms');
+  },0) 
+}
+
+console.log('작업시작');
+work();
+console.log('작업끝');
+```
+
+위 코드를 실행하면 원래의 코드흐름은 '작업시작' - > work() - > 작업끝 순서대로 한줄식 시작하게 되지만 비동기 처리로 work 함수는 백그라운드에서 작업이 되고 종료 수 반환한다. 흐름은 같지만 백그라운드에서 작업하는 동안 다음 코드를 실행시켜 '작업시작' - '작업끝' - work() 순으로 진행된다
+
+
+
+### Promise
+
+비동기 작업을 좀 더 편하게 처리하기 위해서 ES6부터 추가 됨
+
+callback 함수의 단점인 가독성 부분을 처리
+
+```js
+function increaseAndPrint(n, callback) {
+  setTimeout(() => {
+    const increased = n + 1;
+    console.log(increased);
+    if (callback) {
+      callback(increased);
+    }
+  }, 1000)
+}
+
+increaseAndPrint(0, n => {
+  increaseAndPrint(n, n => {
+    increaseAndPrint(n, n => {
+      increaseAndPrint(n, n => {
+        increaseAndPrint(n, n => {
+          console.log('작업 끝')
+        })
+      })
+    })
+  })
+})
+```
+
+위처럼 콜백 함수를 많이 사용해야하면 코드를 보기만해도 현기증이 남
+
+이러한 부분을 해결하기 위해서 Promise가 등장
+
+```js
+const myPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject(new Error());
+  },1000)
+});
+
+myPromise.then(result => {
+  console.log(result);
+}).cateh(e => {
+  console.error(e);
+})
+```
+
+
+
+### async, await
+
+```js
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve,ms));
+}
+
+async function process() {
+  console.log('안녕하세요!');
+  await sleep(1000);
+  console.log('반갑습니다!');
+  
+  return true;
+}
+// 이렇게 사용하면 return값으로 promise를 반환하여 .then을 이어서 사용 가능함
+
+process.then(value => {
+  console.log(value)
+})
+```
+
+ 
+
+### Promise all
+
+```js
+const getDog = async () => {
+  await sleep(1000);
+  return '멍멍이'
+}
+
+const getRabbit = async () => {
+  await sleep(500);
+  return '토끼'
+}
+
+const getTurtle = async () => {
+  await sleep(3000);
+  return '거북이'
+}
+
+async function preocss() {
+  const result = await Promise.all([getDog(),getRabbit(),getTurtle()]);
+  // 3가지 프로미스가 모두 끝났을때 모든 값을 배열로 리턴한다
+  // result = ['멍멍이','토끼','거북이']
+}
+```
+
+
+
+### Promise.race
+
+```js
+const getDog = async () => {
+  await sleep(1000);
+  return '멍멍이'
+}
+
+const getRabbit = async () => {
+  await sleep(500);
+  return '토끼'
+}
+
+const getTurtle = async () => {
+  await sleep(3000);
+  return '거북이'
+}
+
+async function preocss() {
+  const result = await Promise.race([getDog(),getRabbit(),getTurtle()]);
+  // 3가지 프로미스 중 가장 먼저 끝난 값을 리턴한다
+  // 여기서 토끼가 0.5초로 가장 빠르니 토끼가 리턴된다
+}
+```
+
